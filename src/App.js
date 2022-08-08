@@ -11,8 +11,8 @@ export const ACTIONS = {
   EVALUATE: 'evaluate',
 }
 
-const perfromArithmaticOperation = (prevNumStr, currNumStr, operation) => {
-  const [prevNum, currNum] = [Number(prevNumStr), Number(currNumStr)]
+const perfromArithmaticOperation = ({ previousOperand, currentOperand, operation }) => {
+  const [prevNum, currNum] = [parseFloat(previousOperand), parseFloat(currentOperand)]
   switch (operation) {
     case "+":
       return prevNum + currNum
@@ -57,43 +57,12 @@ const reducer = (state, { type, payload }) => {
         }
       }
 
-      switch (payload.operation) {
-        case '+':
-          return {
-            ...state,
-            operation: payload.operation,
-            previousOperand: perfromArithmaticOperation(state.previousOperand, state.currentOperand, state.operation),
-            currentOperand: null,
-          }
-
-        case '-':
-          return {
-            ...state,
-            operation: payload.operation,
-            previousOperand: perfromArithmaticOperation(state.previousOperand, state.currentOperand, state.operation),
-            currentOperand: null,
-          }
-
-        case '*':
-          return {
-            ...state,
-            operation: payload.operation,
-            previousOperand: perfromArithmaticOperation(state.previousOperand, state.currentOperand, state.operation),
-            currentOperand: null,
-          }
-
-        case '÷':
-          return {
-            ...state,
-            operation: payload.operation,
-            previousOperand: perfromArithmaticOperation(state.previousOperand, state.currentOperand, state.operation),
-            currentOperand: null,
-          }
-
-        default:
-          console.error(`'${payload.operation}' is not handled in reducer()`)
+      return {
+        ...state,
+        operation: payload.operation,
+        previousOperand: perfromArithmaticOperation(state),
+        currentOperand: null,
       }
-      break
 
     case ACTIONS.EVALUATE:
 
@@ -102,7 +71,7 @@ const reducer = (state, { type, payload }) => {
         ...state,
         operation: null,
         previousOperand: null,
-        currentOperand: perfromArithmaticOperation(state.previousOperand, state.currentOperand, state.operation)
+        currentOperand: perfromArithmaticOperation(state)
       }
 
     case ACTIONS.DELETE_DIGIT:
